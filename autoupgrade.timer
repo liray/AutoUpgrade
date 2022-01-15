@@ -1,0 +1,9 @@
+[Unit]
+Description=Automatic Upgrade timer
+
+[Timer]
+OnCalendar=3:00
+Persistent=false
+
+[Install]
+WantedBy=basic.target

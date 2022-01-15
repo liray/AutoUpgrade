@@ -1,0 +1,6 @@
+[Unit]
+Description=AutoUpgrade
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/sh /opt/upgrade.sh

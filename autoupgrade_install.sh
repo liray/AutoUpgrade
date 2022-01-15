@@ -5,7 +5,7 @@ curl https://raw.githubusercontent.com/etzisim/AutoUpgrade/main/autoupgrade.time
 curl https://raw.githubusercontent.com/etzisim/AutoUpgrade/main/upgrade.sh --output /opt/upgrade.sh
 
 pacman -Sy
-pacman -S pacman-contrib
+pacman -S pacman-contrib --noconfirm
 
 systemctl daemon-reload
 systemctl enable --now autoupgrade.timer

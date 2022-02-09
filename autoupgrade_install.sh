@@ -1,14 +1,26 @@
 #!/bin/bash
 
-curl https://raw.githubusercontent.com/etzisim/AutoUpgrade/main/autoupgrade.service --output /usr/lib/systemd/system/autoupgrade.service
-curl https://raw.githubusercontent.com/etzisim/AutoUpgrade/main/autoupgrade.timer --output /usr/lib/systemd/system/autoupgrade.timer
-curl https://raw.githubusercontent.com/etzisim/AutoUpgrade/main/upgrade.sh --output /opt/upgrade.sh
+if [[ $EUID -ne 0 ]]; then
+	echo "Error: Install script must be run as root!" 1>&2
+	exit 1
+fi
+
+SHELL_FOLDER=$(dirname "$0")
+servicePath="/usr/lib/systemd/system/"
+serviceName="autoupgrade"
+
+# if exist autoupgrade service, then run uninstall script first.
+/usr/bin/sh ./autoupgrade_uninstall.sh
+
+cp ./${serviceName}.service ${servicePath}${serviceName}.service
+cp ./${serviceName}.timer ${servicePath}${serviceName}.timer
+cp ./upgrade.sh /opt/upgrade.sh
 
 pacman -Sy
 pacman -S pacman-contrib --noconfirm
 
 systemctl daemon-reload
-systemctl enable --now autoupgrade.timer
-systemctl start autoupgrade.service
+systemctl enable --now ${serviceName}.timer
+systemctl start ${serviceName}.service
 
 exit 0
